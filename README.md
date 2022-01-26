@@ -1,6 +1,7 @@
-#Project Silva - the Code
+# Project Silva - the Code
 
 ![Silva logo](/assets/logo.png)
+
 Here is the code for Project Silva, which is broken up into a few parts:
 
 * __Client__ - The interface and the client of the application, which users would use to interact with the installation. It will run mostly on p5.js to process inputs and display the interface
@@ -11,6 +12,6 @@ Here is the code for Project Silva, which is broken up into a few parts:
 
 * __QLC+__ - The software used to interface with the lights and recieve lighting information from Max
 
-##Version 0.1
+## Version 0.1
 
 just getting some basic structure down and testing some technologies such as acceleration input 
