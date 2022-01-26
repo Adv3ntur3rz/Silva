@@ -1,0 +1,11 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "A Server for Project Silva",
+  "main": "index.js",
+  "scripts": {
+    "test": "start"
+  },
+  "author": "Randiel Zoquier",
+  "license": "MIT"
+}
