@@ -7,5 +7,9 @@
     "test": "start"
   },
   "author": "Randiel Zoquier",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.2",
+    "socketio": "^1.0.0"
+  }
 }
