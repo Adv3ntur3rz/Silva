@@ -12,6 +12,6 @@ Here is the code for Project Silva, which is broken up into a few parts:
 
 * __QLC+__ - The software used to interface with the lights and recieve lighting information from Max
 
-## Version 0.1
+## Version 0.1.2
 
-just getting some basic structure down and testing some technologies such as acceleration input 
+Got basic websocket functionality working
