@@ -10,8 +10,8 @@ Here is the code for Project Silva, which is broken up into a few parts:
 
 * __Max__ - The Max/MSP patch that will receive data from the server to change the sound and send light data to QLC+
 
-* __QLC+__ - The software used to interface with the lights and recieve lighting information from Max
+* __QLC__ - The QLC+ workspace used to interface with the lights and recieve lighting information from Max
 
-## Version 0.1.2
+## Version 0.1.3
 
-Got basic websocket functionality working
+tested basic ui Elements in the client and restructured the repository

@@ -15,7 +15,7 @@ const io = new Server(server, {
 const clients = {}; //keeping track of clients (look at ttt code for use of this)
 let maxClient; //variable to store the maxClient socket id or whatever
 let instruments = [false, false, false, false]; //keep track if an instrument is connected already; 0: drums, 1:bass, 2: rhythm, 3: lead
-
+let audienceCount = 0; //number of audience members
 
 //on connection request
 io.on("connection", (socket)=>{
