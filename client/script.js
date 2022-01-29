@@ -15,6 +15,8 @@ let screenState = 0; //keep track of which screen we are displaying
 
 //declare UI elements
 let drumButton, bassButton, rhythmButton, leadButton, audButton, backButton;
+
+let xyControl;
 function preload(){
 
 }
@@ -43,6 +45,7 @@ function setup() {
     backButton = new uiButton(width*0.06, height * 0.06, width*0.10, ()=>{
         screenState = 0;    
     });
+    xyControl = new xyPad(width/2, height *0.45, width/2, height *0.45, width *0.7);
 }
   
 function draw() {
@@ -76,6 +79,7 @@ function windowResized(){
 
 //functions for rendering the different screen states
 function homeScreen(){
+    resetUI();
     textSize(height * 0.07);
     textAlign(CENTER);
     rectMode(CENTER);
@@ -91,6 +95,7 @@ function homeScreen(){
 }
 
 function errorScreen(){
+    resetUI();
     textSize(height/16);
     textAlign(CENTER);
     rectMode(CENTER);
@@ -100,26 +105,32 @@ function errorScreen(){
 }
 
 function drumScreen(){
+    resetUI();
     background(255,100,100);
     backButton.draw('#000000');
+    xyControl.draw(color(0,0,0));
 }
 
 function bassScreen(){
+    resetUI();
     background(255,255,100);
     backButton.draw('#000000');
 }
 
 function rhythmScreen(){
+    resetUI();
     background(100,100,255);
     backButton.draw('#000000');
 }
 
 function leadScreen(){
+    resetUI();
     background(255,100,255);
     backButton.draw('#000000');
 }
 
 function audienceScreen(){
+    resetUI();
     background(100);
     backButton.draw('#000000');
 }
@@ -133,10 +144,27 @@ function mousePressed(){
     leadButton.detectInput(mouseX, mouseY);
     audButton.detectInput(mouseX, mouseY);
     backButton.detectInput(mouseX, mouseY);
+    xyControl.onClick(mouseX, mouseY);
+}
+
+function mouseDragged(){
+    xyControl.onDrag(mouseX, mouseY);
+}
+
+
+//UI management
+
+function resetUI(){
+    drumButton.unShow();
+    bassButton.unShow();
+    rhythmButton.unShow();
+    leadButton.unShow();
+    audButton.unShow();
+    backButton.unShow();
+    xyControl.unShow();
 }
 /*
 notes:
 
--add instrument choice buttons
-- add catch for aspect ratio
+
 */
