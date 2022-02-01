@@ -48,7 +48,7 @@ function setup() {
     backButton = new uiButton(width*0.06, height * 0.06, width*0.10, ()=>{
         screenState = 0;    
     });
-    xyControl = new xyPad(width/2, height *0.45, width/2, height *0.45, width *0.7);
+    xyControl = new xyPad(width/2, height *0.35, width/2, height *0.45, width *0.7);
     filterSlider = new Slider(width/2, height *0.8, width/ 2, width *0.7);
     sequenceSelector = new Selector(width * 0.2, height * 0.7, width *0.2, 4, 0, width * 0.15);
 }
