@@ -12,6 +12,6 @@ Here is the code for Project Silva, which is broken up into a few parts:
 
 * __QLC__ - The QLC+ workspace used to interface with the lights and recieve lighting information from Max
 
-## Version 0.1.04
+## Version 0.1.05
 
-Added XY pad to the UI
+Added slider and selector as part of the UI, meaning all the basic input modalities have a barebones design. 

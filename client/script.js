@@ -17,6 +17,9 @@ let screenState = 0; //keep track of which screen we are displaying
 let drumButton, bassButton, rhythmButton, leadButton, audButton, backButton;
 
 let xyControl;
+let filterSlider;
+let sequenceSelector;
+
 function preload(){
 
 }
@@ -46,6 +49,8 @@ function setup() {
         screenState = 0;    
     });
     xyControl = new xyPad(width/2, height *0.45, width/2, height *0.45, width *0.7);
+    filterSlider = new Slider(width/2, height *0.8, width/ 2, width *0.7);
+    sequenceSelector = new Selector(width * 0.2, height * 0.7, width *0.2, 4, 0, width * 0.15);
 }
   
 function draw() {
@@ -92,6 +97,8 @@ function homeScreen(){
     rhythmButton.draw(color(100,100,255));
     leadButton.draw(color(255,100,255));
     audButton.draw(color(100));
+
+    
 }
 
 function errorScreen(){
@@ -109,6 +116,16 @@ function drumScreen(){
     background(255,100,100);
     backButton.draw('#000000');
     xyControl.draw(color(0,0,0));
+    filterSlider.draw(color(0,0,50));
+    sequenceSelector.draw(color(255,255,110));
+
+    textSize(50);
+    fill(0);
+    noStroke();
+    text(`X: ${xyControl.getControlValues().x.toFixed(2)}, Y ${xyControl.getControlValues().y.toFixed(2)}`, width * 0.5, height *0.9);
+    text(`slider: ${filterSlider.getControlValue().toFixed(2)}`, width/2, height * 0.93);
+    text(`selector: ${sequenceSelector.getControlValue()}`, width/2, height * 0.96);
+
 }
 
 function bassScreen(){
@@ -144,11 +161,13 @@ function mousePressed(){
     leadButton.detectInput(mouseX, mouseY);
     audButton.detectInput(mouseX, mouseY);
     backButton.detectInput(mouseX, mouseY);
-    xyControl.onClick(mouseX, mouseY);
+    sequenceSelector.onClick(mouseX, mouseY);
+    // xyControl.onClick(mouseX, mouseY);
 }
 
 function mouseDragged(){
     xyControl.onDrag(mouseX, mouseY);
+    filterSlider.onDrag(mouseX, mouseY);
 }
 
 
@@ -162,6 +181,8 @@ function resetUI(){
     audButton.unShow();
     backButton.unShow();
     xyControl.unShow();
+    filterSlider.unShow();
+    sequenceSelector.unShow();
 }
 /*
 notes:
