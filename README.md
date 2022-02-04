@@ -12,6 +12,14 @@ Here is the code for Project Silva, which is broken up into a few parts:
 
 * __QLC__ - The QLC+ workspace used to interface with the lights and recieve lighting information from Max
 
+
+## Version 0.1.06
+* added Lato as the default font
+* Added note selector UI element
+* reorganized the constructors of the UI objects 
+* added the first color palette and color management in the UI classes
+* prevented scrolling and highlighting on the page to keep elements static while interacting
+* started designing the basic socket.io communications between client and server
 ## Version 0.1.05
 
 Added slider and selector as part of the UI, meaning all the basic input modalities have a barebones design. 
