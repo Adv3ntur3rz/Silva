@@ -12,7 +12,8 @@ Here is the code for Project Silva, which is broken up into a few parts:
 
 * __QLC__ - The QLC+ workspace used to interface with the lights and recieve lighting information from Max
 
-
+## Version 0.1.07
+* Added exclusivity for instrument choice on ther server and client end (this means when one client chooses an instrument, another client is not able to choose that instrument)
 ## Version 0.1.06
 * added Lato as the default font
 * Added note selector UI element

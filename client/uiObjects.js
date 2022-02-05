@@ -2,11 +2,11 @@
 //UI elements are generated based on a color pallete and output values when input is detected
 
 function changeLuminosity(c, level){
+
     let newR = constrain(c.levels[0] + level, 0, 255);
     let newG = constrain(c.levels[1] + level, 0, 255);
-    let newB = constrain(c.levels[2] + level, 0, 255);
-
-
+    let newB = constrain(c.levels[2] + (level * 0.8), 0, 255);
+    
     return color(newR, newG, newB);
 }
 
@@ -20,14 +20,19 @@ class uiButton{
         this.size = size;
 
         this.c = c;
-
+        this.disabledColor = changeLuminosity(c, -150);
         this.shown = false;
     }
 
-    draw(t){
+    draw(t, disabled){
         this.shown = true;
         noStroke();
-        fill(this.c);
+
+        if(disabled){
+            fill(this.disabledColor);
+        }else{
+            fill(this.c);
+        }
         circle(this.x, this.y, this.size);
         fill(0);
         textSize(this.size * 0.35);
@@ -35,8 +40,8 @@ class uiButton{
         text(t, this.x, this.y);
     }
 
-    detectInput(posX, posY, func){
-        if(this.shown){
+    detectInput(posX, posY, disabled, func){
+        if(this.shown && !disabled){
             let distance = Math.sqrt( Math.pow(posX - this.x, 2) + Math.pow(posY - this.y, 2));
 
             if (distance < this.size/2){

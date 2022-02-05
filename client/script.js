@@ -20,6 +20,9 @@ let filterSlider;
 let sequenceSelector;
 let leadNotesButtons;
 
+//keep track of instruments states
+let instrumentStates = [false, false, false, false];
+
 function preload(){
     font = loadFont("Lato/Lato-Light.ttf");
 }
@@ -90,6 +93,12 @@ function windowResized(){
     setup();
 }
   
+//socket events
+
+socket.on("updateChoices", (data)=>{
+    instrumentStates = data;
+    console.log("choices updated");
+});
 
 //functions for rendering the different screen states
 function homeScreen(){
@@ -102,10 +111,10 @@ function homeScreen(){
     text('HI!', width / 2, height * 0.15);
 
     rectMode(CORNER);
-    drumButton.draw("Drm");
-    bassButton.draw("Bss");
-    rhythmButton.draw("Rtm");
-    leadButton.draw("Ld");
+    drumButton.draw("Drm", instrumentStates[0]);
+    bassButton.draw("Bss", instrumentStates[1]);
+    rhythmButton.draw("Rtm", instrumentStates[2]);
+    leadButton.draw("Ld", instrumentStates[3]);
     audButton.draw("Aud");
 
     
@@ -170,12 +179,12 @@ function audienceScreen(){
 //input management
 
 function mousePressed(){
-    drumButton.detectInput(mouseX, mouseY, ()=>{screenSetup(1);});
-    bassButton.detectInput(mouseX, mouseY, ()=>{screenSetup(2)});
-    rhythmButton.detectInput(mouseX, mouseY,()=>{screenSetup(3)});
-    leadButton.detectInput(mouseX, mouseY, ()=>{screenSetup(4)});
-    audButton.detectInput(mouseX, mouseY, ()=>{screenSetup(5)});
-    backButton.detectInput(mouseX, mouseY, ()=>{screenSetup(6)});
+    drumButton.detectInput(mouseX, mouseY, instrumentStates[0], ()=>{screenSetup(1);});
+    bassButton.detectInput(mouseX, mouseY, instrumentStates[1], ()=>{screenSetup(2)});
+    rhythmButton.detectInput(mouseX, mouseY,instrumentStates[2], ()=>{screenSetup(3)});
+    leadButton.detectInput(mouseX, mouseY, instrumentStates[3], ()=>{screenSetup(4)});
+    audButton.detectInput(mouseX, mouseY, false, ()=>{screenSetup(5)});
+    backButton.detectInput(mouseX, mouseY, false, ()=>{screenSetup(6)});
 
     sequenceSelector.onClick(mouseX, mouseY, (data)=>{ 
         socket.emit("instrumentInput", screenState - 1, "sequence", data);
@@ -251,11 +260,13 @@ function screenSetup(screenNumber){
         screenState = 5;
     }
     if(screenNumber == 6){
+        socket.emit("instrumentLeave", screenState - 1);
         screenState = 0; 
     }
 }
+
 /*
 notes:
 
-
+known issue: when multiple instruments are in their respective screens, when one backs out the home screen doesn't update properly ???
 */
