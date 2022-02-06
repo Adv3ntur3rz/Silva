@@ -11,7 +11,8 @@ Here is the code for Project Silva, which is broken up into a few parts:
 * __Max__ - The Max/MSP patch that will receive data from the server to change the sound and send light data to QLC+
 
 * __QLC__ - The QLC+ workspace used to interface with the lights and recieve lighting information from Max
-
+## Version 0.1.08
+* Started programming the Max client and establishing its connection to the server
 ## Version 0.1.07
 * Added exclusivity for instrument choice on ther server and client end (this means when one client chooses an instrument, another client is not able to choose that instrument)
 ## Version 0.1.06

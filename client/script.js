@@ -1,4 +1,4 @@
-const socket = io('192.168.15.26:8080'); //change this when deploying
+const socket = io('192.168.15.33:8080'); //change this when deploying
 
 let font; //loading a new font
 let colorPalette1;
@@ -149,7 +149,7 @@ function bassScreen(){
     filterSlider.draw();
     sequenceSelector.draw();
 
-}
+r}
 
 function rhythmScreen(){
     resetUI();

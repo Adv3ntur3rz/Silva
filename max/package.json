@@ -1,0 +1,14 @@
+{
+  "name": "silva-max-client",
+  "version": "1.0.0",
+  "description": "a max/msp client for project silva",
+  "main": "max_client.js",
+  "scripts": {
+    "test": "start"
+  },
+  "author": "Randiel Zoquier",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io-client": "^4.4.1"
+  }
+}

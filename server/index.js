@@ -12,8 +12,8 @@ const io = new Server(server, {
     }
 });
 
-const clients = {}; //keeping track of clients (look at ttt code for use of this)
-let maxClient; //variable to store the maxClient socket id or whatever
+let maxClient; //variable to store the maxClient socket 
+
 let instruments = [false, false, false, false]; //keep track if an instrument is connected already; 0: drums, 1:bass, 2: rhythm, 3: lead
 let instrumentsSocketId = [undefined, undefined, undefined, undefined];
 let audienceCount = 0; //number of audience members
@@ -22,6 +22,11 @@ let audienceIDs = [];
 //on connection request
 io.on("connection", (socket)=>{
 
+    //register the maxClient socket
+    socket.on("maxConnect", ()=>{
+        maxClient = socket;
+        console.log("Max client is connected");
+    });
     //send initial info
     socket.emit("updateChoices", instruments);
     console.log(`socket connnected with the id ${socket.id}`);
@@ -49,12 +54,20 @@ io.on("connection", (socket)=>{
 
     //different disconnect events
     socket.on("disconnect",()=>{
+
         console.log(`socket disconnected with the id: ${socket.id}`);
+        //if the socket is the Max Client, remove its registration
+        if(socket.id == maxClient.id){
+            maxClient = undefined;
+            console.log("Max client disconnected");
+        }
+        //if an instrumente disconnects, remove its registration on the server and update the client's choices
         for(let i = 0; i < 4; i++){
             if(instrumentsSocketId[i] == socket.id){
                 instrumentDisconnect(i, socket);
             }
         }
+
     });
 
     socket.on("instrumentLeave", (data)=>{
