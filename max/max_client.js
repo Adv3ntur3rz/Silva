@@ -8,12 +8,23 @@ let socket;
 max_api.addHandler('connect', (url)=>{
     socket = io(url);
     socket.emit("maxConnect");
+
+    socket.on("instrumentMessage", (data)=>{
+        let instId = data.instId;
+        let type = data.type;
+        let value1 = data.value1;
+        let value2 = data.value2;
+        max_api.outlet(instId, type, value1, value2);
+    });
+
 });
 
 max_api.addHandler('disconnect', ()=>{
     socket.close();
 });
 
-max_api.addHandler('message', (msg)=>{
-    socket.emit("max", msg);
-});
+//handling the downbeat event
+max_api.addHandler("downbeat", (msg)=>{
+    socket.emit("downbeat", msg);
+})
+

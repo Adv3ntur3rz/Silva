@@ -271,7 +271,7 @@ class noteButtons{
                 if(distance < this.size){
                     this.noteNumber = k;
                     this.notePressed = true;
-                    func([this.noteNumber, this.notePressed]);
+                    func(this.noteNumber);
                 }
             }
         }
@@ -282,9 +282,9 @@ class noteButtons{
                 let distance = Math.sqrt( Math.pow(posX - this.buttons[j].x, 2) + Math.pow(posY - this.buttons[j].y, 2));
 
                 if(distance < this.size){
-                    this.noteNumber = undefined;
+                    this.noteNumber = j;
                     this.notePressed = false;
-                    func([this.noteNumber, this.notePressed]);
+                    func(this.noteNumber);
                 }
             }
         }

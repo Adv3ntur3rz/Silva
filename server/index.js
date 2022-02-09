@@ -50,6 +50,14 @@ io.on("connection", (socket)=>{
     //transfer input data
     socket.on("instrumentInput", (instrumentId, type, value)=>{
         console.log(`instrumentId: ${instrumentId}, type: ${type}, value: ${value}`);
+        let instData;
+        if (Array.isArray(value)){
+            instData = {instId: instrumentId, type: type , value1: value[0],value2: value[1]};
+        }else{
+            instData = {instId: instrumentId, type: type , value1: value ,value2: 0};
+        }
+        
+        maxClient.emit("instrumentMessage", instData);
     });
 
     //different disconnect events
