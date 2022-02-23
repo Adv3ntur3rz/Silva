@@ -17,6 +17,13 @@ max_api.addHandler('connect', (url)=>{
         max_api.outlet(instId, type, value1, value2);
     });
 
+    socket.on("audienceUpdate", (data)=>{
+        max_api.outlet(4, data);
+    });
+
+    socket.on("updateChoices", (data)=>{
+        max_api.outlet("choice", data[0], data[1],data[2],data[3]);
+    });
 });
 
 max_api.addHandler('disconnect', ()=>{

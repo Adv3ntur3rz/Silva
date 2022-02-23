@@ -1,4 +1,3 @@
-const socket = io('192.168.15.33:8080'); //change this when deploying
 
 let font; //loading a new font
 let colorPalette1;
@@ -20,8 +19,23 @@ let filterSlider;
 let sequenceSelector;
 let leadNotesButtons;
 
-//keep track of instruments states
+//keep track of instruments states and Max client state
 let instrumentStates = [false, false, false, false];
+let maxClientState = false;
+
+//const socket = io('192.168.15.33:8080'); //for home testing
+// const socket = io('https://randielzoquier.com/:8080'); 
+const socket = io();
+//socket events
+
+socket.on("updateChoices", (data)=>{
+    instrumentStates = data;
+    console.log("choices updated");
+});
+
+socket.on("maxClientState", (data)=>{
+    maxClientState = data;
+});
 
 function preload(){
     font = loadFont("Lato/Lato-Light.ttf");
@@ -39,8 +53,8 @@ function setup() {
         color(28,6,153)
     ]; //an array to hold color palette for all elements on screen
     /* 
-    0: backgroundColor, 
-    1: foregroundColor, 
+    0: home backgroundColor, 
+    1: home foregroundColor, 
     2: DrumColor, 
     3: BassColor,
     4: RhythmColor, 
@@ -93,30 +107,33 @@ function windowResized(){
     setup();
 }
   
-//socket events
-
-socket.on("updateChoices", (data)=>{
-    instrumentStates = data;
-    console.log("choices updated");
-});
-
 //functions for rendering the different screen states
 function homeScreen(){
-    background(colorPalette1[0]); 
-    resetUI();
-    textSize(height * 0.07);
-    textAlign(CENTER);
-    rectMode(CENTER);
-    fill(0);
-    text('HI!', width / 2, height * 0.15);
 
-    rectMode(CORNER);
-    drumButton.draw("Drm", instrumentStates[0]);
-    bassButton.draw("Bss", instrumentStates[1]);
-    rhythmButton.draw("Rtm", instrumentStates[2]);
-    leadButton.draw("Ld", instrumentStates[3]);
-    audButton.draw("Aud");
+    if(maxClientState){
+        background(colorPalette1[0]); 
+        resetUI();
+        textSize(height * 0.07);
+        textAlign(CENTER);
+        rectMode(CENTER);
+        fill(0);
+        text('HI!', width / 2, height * 0.15);
 
+        rectMode(CORNER);
+        drumButton.draw("Drm", instrumentStates[0]);
+        bassButton.draw("Bss", instrumentStates[1]);
+        rhythmButton.draw("Rtm", instrumentStates[2]);
+        leadButton.draw("Ld", instrumentStates[3]);
+        audButton.draw("Aud");
+    }else{
+        background(100,255,100); 
+        resetUI();
+        textSize(height/16);
+        textAlign(CENTER , CENTER);
+        rectMode(CENTER);
+        fill(0);
+        text('The installation is not currently active.', width / 2, height* 0.45, width * 0.6, height * 0.5); 
+    }
     
 }
 
@@ -149,7 +166,7 @@ function bassScreen(){
     filterSlider.draw();
     sequenceSelector.draw();
 
-r}
+}
 
 function rhythmScreen(){
     resetUI();
@@ -184,7 +201,14 @@ function mousePressed(){
     rhythmButton.detectInput(mouseX, mouseY,instrumentStates[2], ()=>{screenSetup(3)});
     leadButton.detectInput(mouseX, mouseY, instrumentStates[3], ()=>{screenSetup(4)});
     audButton.detectInput(mouseX, mouseY, false, ()=>{screenSetup(5)});
-    backButton.detectInput(mouseX, mouseY, false, ()=>{screenSetup(6)});
+    backButton.detectInput(mouseX, mouseY, false, ()=>{
+        if(screenState == 5){
+            screenSetup(7);
+        }else{
+            screenSetup(6);
+        }
+        
+    });
 
     sequenceSelector.onClick(mouseX, mouseY, (data)=>{ 
         socket.emit("instrumentInput", screenState - 1, "sequence", data);
@@ -258,9 +282,14 @@ function screenSetup(screenNumber){
     }
     if(screenNumber == 5){
         screenState = 5;
+        socket.emit("audienceJoin");
     }
     if(screenNumber == 6){
         socket.emit("instrumentLeave", screenState - 1);
+        screenState = 0; 
+    }
+    if(screenNumber == 7){
+        socket.emit("audienceLeave");
         screenState = 0; 
     }
 }

@@ -250,7 +250,7 @@ class noteButtons{
         this.shown = true;
         
         for(let j = 0; j < this.numberOfNotes; j++){
-            if(j == this.noteNumber){
+            if(j == this.noteNumber && this.notePressed){
                 fill(this.c);
                 stroke(this.c);
             }else{
