@@ -1,6 +1,8 @@
 ///utility classes for all the UI elements in the client
 //UI elements are generated based on a color pallete and output values when input is detected
 
+var mainStrokeWidth = 6; // have a consistent strokeWidth
+
 function changeLuminosity(c, level){
 
     let newR = constrain(c.levels[0] + level, 0, 255);
@@ -11,7 +13,7 @@ function changeLuminosity(c, level){
 }
 
 //basic button used for navigation
-class uiButton{
+class UiButton{
 
     //position
     constructor(x,y, size, c){
@@ -55,7 +57,42 @@ class uiButton{
     }
 }
 
-class xyPad{
+class BackButton{
+
+    constructor(x,y, size){
+        this.x = x;
+        this.y = y;
+        this.size = size;
+
+        this.shown = false;
+    }
+
+    draw(c){
+        this.shown = true;
+        noFill();
+        strokeWeight(mainStrokeWidth);
+        stroke(changeLuminosity(c, -100));
+        strokeCap(ROUND);
+        line(this.x -(this.size/2), this.y, this.x + (this.size* 0.3), this.y);
+        line(this.x -(this.size/2), this.y, this.x - (this.size * 0.25), this.y - (this.size*0.3));
+        line(this.x -(this.size/2), this.y, this.x - (this.size * 0.25), this.y + (this.size*0.3));
+    }
+
+    detectInput(posX, posY, func){
+        if(this.shown){
+            let distance = Math.sqrt( Math.pow(posX - this.x, 2) + Math.pow(posY - this.y, 2));
+            if (distance < this.size/2){ 
+                func();
+            }
+        }
+    }
+
+    unShow(){
+        this.shown = false;
+    }
+}
+
+class XyPad{
 
     constructor(screenPosX, screenPosY, initialControlX, initialControlY, size, c){
         this.screenPosX = screenPosX;
@@ -73,14 +110,17 @@ class xyPad{
     draw(){
         this.shown = true;
 
-        //crosshair
-        strokeWeight(5);
-        stroke(0, 0, 0, 50);
+        strokeWeight(mainStrokeWidth);
+        //inner circles
+        stroke(0, 60);
         noFill();
-        line(this.screenPosX, this.screenPosY - (this.size /2), this.screenPosX, this.screenPosY + (this.size /2));
-        line(this.screenPosX  - (this.size /2), this.screenPosY, this.screenPosX  + (this.size /2), this.screenPosY);
+        circle(this.screenPosX, this.screenPosY, this.size * 0.33);
+        circle(this.screenPosX, this.screenPosY, this.size * 0.66);
+
+        noStroke();
+        fill(0, 60);
+        circle(this.screenPosX, this.screenPosY, this.size * 0.1);
         //outerCircle
-        strokeWeight(10);
         stroke(this.c);
         noFill();
         circle(this.screenPosX, this.screenPosY, this.size);
@@ -132,6 +172,7 @@ class Slider{
 
     draw(){
         this.shown = true;
+        strokeCap(ROUND);
         strokeWeight(10);
         stroke(0,0,0,75);
         noFill();
@@ -186,10 +227,12 @@ class Selector{
         for(let j =0; j < this.count; j++){
             if(j == this.choice){
                 stroke(this.c);
+                strokeWeight(mainStrokeWidth);
                 fill(this.c);
                 circle(this.buttons[j].x, this.buttons[j].y, this.size);
             }else{
                 stroke(this.c);
+                strokeWeight(mainStrokeWidth);
                 noFill();
                 circle(this.buttons[j].x, this.buttons[j].y, this.size);
             }
@@ -220,28 +263,28 @@ class Selector{
     }
 }
 
-class noteButtons{
+class NoteButtons{
 
     constructor(x, y, width, numberOfNotes, c){
         this.x = x;
         this.y = y;
         this.radius = width / 2;
-        this.size = this.radius * 0.45;
+        this.size = this.radius * 0.5;
 
         this.numberOfNotes = numberOfNotes;
         
         this.c = changeLuminosity(c, -100);
 
         this.shown = false;
-        this.noteNumber = undefined;
-        this.notePressed = false;
+        this.notePressed = [];
 
         this.buttons = [];
         for(let i = 0; i < this.numberOfNotes; i++){
-            let angle = ((360 / this.numberOfNotes) * i) - 90;
+            let angle = ((360 / this.numberOfNotes) * i);
             let circleX = (this.radius * Math.sin(radians(angle))) + this.x;
             let circleY = (this.radius * Math.cos(radians(angle))) + this.y;
             this.buttons.push(createVector(circleX,circleY));
+            this.notePressed.push(false);
         }
 
     }
@@ -250,41 +293,81 @@ class noteButtons{
         this.shown = true;
         
         for(let j = 0; j < this.numberOfNotes; j++){
-            if(j == this.noteNumber && this.notePressed){
+
+            if(this.notePressed[j]){
                 fill(this.c);
+                strokeWeight(mainStrokeWidth);
                 stroke(this.c);
             }else{
                 noFill();
+                strokeWeight(mainStrokeWidth);
                 stroke(this.c);
+                
             }
-            
-            circle(this.buttons[j].x, this.buttons[j].y, this.size);
+            let calcSize = map(j, 0, this.numberOfNotes, this.size, this.size *0.5);
+            circle(this.buttons[j].x, this.buttons[j].y, calcSize);
+            noStroke();
+            fill(this.c);
+            circle(this.buttons[j].x, this.buttons[j].y, this.size *0.2);
+
+
         }
     }
 
-    
-    onPress(posX, posY, func){
+    onDrag(posX, posY, func){
         if(this.shown){
-            for(let k = 0; k < this.numberOfNotes; k++){
-                let distance = Math.sqrt( Math.pow(posX - this.buttons[k].x, 2) + Math.pow(posY - this.buttons[k].y, 2));
-
-                if(distance < this.size){
-                    this.noteNumber = k;
-                    this.notePressed = true;
-                    func(this.noteNumber);
+            for(let j = 0; j < this.numberOfNotes; j++){
+                let distance = Math.sqrt( Math.pow(posX - this.buttons[j].x, 2) + Math.pow(posY - this.buttons[j].y, 2));
+                let calcSize = map(j, 0, this.numberOfNotes, this.size, this.size *0.5);
+                if(distance > calcSize){
+                    this.notePressed[j] = false;
+                    func(j);
                 }
             }
         }
     }
-    onRelease(posX, posY, func){
+
+    onPress(posX, posY, func){
+        if(this.shown){
+            for(let k = 0; k < this.numberOfNotes; k++){
+                let distance = Math.sqrt( Math.pow(posX - this.buttons[k].x, 2) + Math.pow(posY - this.buttons[k].y, 2));
+                let calcSize = map(k, 0, this.numberOfNotes, this.size, this.size *0.5);
+                if(distance < calcSize){
+                    this.notePressed[k] = true;
+                    func(k);
+                }
+            }
+        }
+    }
+    // only runs if there are multiple touch points
+    onMultiRelease(posX, posY, func){
         if(this.shown){
             for(let j = 0; j < this.numberOfNotes; j++){
+                if(this.notePressed[j]){
+                    let distance = Math.sqrt( Math.pow(posX - this.buttons[j].x, 2) + Math.pow(posY - this.buttons[j].y, 2));
+                    let calcSize = map(j, 0, this.numberOfNotes, this.size, this.size *0.5);
+                    if(distance < calcSize){
+                        //if there is still a touch point in range, we don't change anything
+                    }else{
+                        this.notePressed[j] = false;
+                        func(j);
+                        //if not we get rid of it
+                    }
+                }
+                
+            }
+        }
+    }
+    //only runs if the touch point is the final one
+    onLastRelease(posX, posY, func){
+        if(this.shown){
+            for(let j = 0; j < this.numberOfNotes; j++){
+                
                 let distance = Math.sqrt( Math.pow(posX - this.buttons[j].x, 2) + Math.pow(posY - this.buttons[j].y, 2));
-
-                if(distance < this.size){
-                    this.noteNumber = j;
-                    this.notePressed = false;
-                    func(this.noteNumber);
+                let calcSize = map(j, 0, this.numberOfNotes, this.size, this.size *0.5);
+                if(distance < calcSize){
+                    this.notePressed[j] = false;
+                    func(j);
                 }
             }
         }
@@ -292,6 +375,27 @@ class noteButtons{
 
     unShow(){
         this.shown = false;
+    }
+
+}
+
+class ProgressBar{
+    constructor(x,y, size){
+        this.x = x;
+        this.y = y;
+        this.size = size;
+    }
+
+    draw(c,currentTime,lastDownBeat, loopLength){
+
+        let progress = (currentTime - lastDownBeat) / loopLength;
+        let arcAngle = (progress * 360) - 90;
+        strokeCap(SQUARE);
+        stroke(0, 100);
+        noFill();
+        circle(this.x, this.y, this.size);
+        stroke(changeLuminosity(c, -100));
+        arc(this.x, this.y, this.size, this.size, radians(-90), radians(arcAngle), OPEN);
     }
 
 }

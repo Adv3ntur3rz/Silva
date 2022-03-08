@@ -30,8 +30,16 @@ max_api.addHandler('disconnect', ()=>{
     socket.close();
 });
 
-//handling the downbeat event
-max_api.addHandler("downbeat", (msg)=>{
-    socket.emit("downbeat", msg);
-})
+//handling the timing events
+max_api.addHandler("downbeat", ()=>{
+    socket.emit("downbeat");
+});
+
+max_api.addHandler("startLoop", ()=>{
+    socket.emit("startLoop");
+});
+
+max_api.addHandler("endLoop", ()=>{
+    socket.emit("endLoop");
+});
 

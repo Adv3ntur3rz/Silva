@@ -1,6 +1,10 @@
 
 let font; //loading a new font
-let colorPalette1;
+let colorPalette1, colorPalette2; //to store the color palletes
+
+let lastDownbeat = 0; //keep track millisecond count of the last DownBeat
+let loopDuration = 632 * 4 * 8;//have a variable to keep track of the loop duration in milliseconds
+let looping = false;
 
 let screenState = 0; //keep track of which screen we are displaying
 /*
@@ -13,11 +17,13 @@ let screenState = 0; //keep track of which screen we are displaying
 */
 
 //declare UI elements
+let logo;
 let drumButton, bassButton, rhythmButton, leadButton, audButton, backButton;
 let xyControl;
 let filterSlider;
 let sequenceSelector;
 let leadNotesButtons;
+let progressBar;
 
 //keep track of instruments states and Max client state
 let instrumentStates = [false, false, false, false];
@@ -26,6 +32,7 @@ let maxClientState = false;
 //const socket = io('192.168.15.33:8080'); //for home testing
 // const socket = io('https://randielzoquier.com/:8080'); 
 const socket = io();
+
 //socket events
 
 socket.on("updateChoices", (data)=>{
@@ -37,8 +44,19 @@ socket.on("maxClientState", (data)=>{
     maxClientState = data;
 });
 
+//for timing based elements
+socket.on("downbeat",()=>{
+    lastDownbeat = millis();
+});
+
+socket.on("looping", (msg)=>{
+    looping = msg;
+});
+
+
 function preload(){
     font = loadFont("Lato/Lato-Light.ttf");
+    logo = loadImage("logo.png");
 }
 
 function setup() {
@@ -46,7 +64,7 @@ function setup() {
     colorPalette1 = [
         color(59,62,37),
         color(212,188,115),
-        color(46,38,191),
+        color(90, 51, 166),
         color(50,110,207),
         color(39,181,196),
         color(48,207,169),
@@ -65,19 +83,20 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     textFont(font); // now the font is Lato!
 
-    //initialize main UI elements
-    drumButton = new uiButton(width * 0.25, height * 0.35, width*0.15, colorPalette1[1]);
-    bassButton = new uiButton(width * 0.75, height * 0.35, width*0.15, colorPalette1[1]);
-    rhythmButton = new uiButton(width *0.25, height * 0.55, width*0.15, colorPalette1[1]);
-    leadButton = new uiButton(width * 0.75, height * 0.55, width*0.15, colorPalette1[1]);
-    audButton = new uiButton(width * 0.5, height * 0.75, width*0.15, colorPalette1[1]);
-    backButton = new uiButton(width*0.06, height * 0.06, width*0.10, color(255));
+    //initialize main UI elements that will not change
+    drumButton = new UiButton(width * 0.5, height * 0.45, width*0.2, colorPalette1[1]);
+    bassButton = new UiButton(width * 0.25, height * 0.55, width*0.2, colorPalette1[1]);
+    rhythmButton = new UiButton(width *0.75, height * 0.55, width*0.2, colorPalette1[1]);
+    leadButton = new UiButton(width * 0.5, height * 0.65, width*0.2, colorPalette1[1]);
+    audButton = new UiButton(width * 0.5, height * 0.87, width*0.2, colorPalette1[1]);
 
-    //initialize elements to prevent undefined errors
-    xyControl = new xyPad(0, 0, 0, 0, 0, color(0));
+    backButton = new BackButton(width*0.1, height * 0.06, width*0.10);
+    progressBar = new ProgressBar(width *0.9, height * 0.06, width *0.10);
+    //initialize elements that will be rendered and changed later to prevent undefined errors
+    xyControl = new XyPad(0, 0, 0, 0, 0, color(0));
     filterSlider = new Slider(0, 0, 0, 0, color(0));
     sequenceSelector = new Selector(0, 0, 0, 0, 0, 0, color(0));
-    leadNotesButtons = new noteButtons(0, 0,0, 0, color(0));
+    leadNotesButtons = new NoteButtons(0, 0,0, 0, color(0));
         
 }
   
@@ -104,7 +123,7 @@ function draw() {
 }
 
 function windowResized(){
-    setup();
+    resizeCanvas(windowWidth, windowHeight);
 }
   
 //functions for rendering the different screen states
@@ -113,12 +132,10 @@ function homeScreen(){
     if(maxClientState){
         background(colorPalette1[0]); 
         resetUI();
-        textSize(height * 0.07);
-        textAlign(CENTER);
-        rectMode(CENTER);
-        fill(0);
-        text('HI!', width / 2, height * 0.15);
-
+        
+        //logo
+        imageMode(CENTER);
+        image(logo, width * 0.5, height * 0.2, width * 0.5, width * 0.5);
         rectMode(CORNER);
         drumButton.draw("Drm", instrumentStates[0]);
         bassButton.draw("Bss", instrumentStates[1]);
@@ -149,9 +166,9 @@ function errorScreen(){
 }
 
 function drumScreen(){
-    resetUI();
     background(colorPalette1[2]);
-    backButton.draw("<");
+    backButton.draw(colorPalette1[2]);
+    if(looping){progressBar.draw(colorPalette1[2], millis(), lastDownbeat, loopDuration);}
     xyControl.draw();
     filterSlider.draw();
     sequenceSelector.draw();
@@ -159,9 +176,10 @@ function drumScreen(){
 }
 
 function bassScreen(){
-    resetUI();
     background(colorPalette1[3]);
-    backButton.draw("<");
+    backButton.draw(colorPalette1[3]);
+
+    if(looping){progressBar.draw(colorPalette1[3], millis(), lastDownbeat, loopDuration);}
     xyControl.draw();
     filterSlider.draw();
     sequenceSelector.draw();
@@ -169,9 +187,9 @@ function bassScreen(){
 }
 
 function rhythmScreen(){
-    resetUI();
     background(colorPalette1[4]);
-    backButton.draw("<");
+    backButton.draw(colorPalette1[4]);
+    if(looping){progressBar.draw(colorPalette1[4], millis(), lastDownbeat, loopDuration);}
     xyControl.draw();
     filterSlider.draw();
     sequenceSelector.draw();
@@ -179,59 +197,85 @@ function rhythmScreen(){
 }
 
 function leadScreen(){
-    resetUI();
     background(colorPalette1[5]);
-    backButton.draw("<");
+    backButton.draw(colorPalette1[5]);
+    if(looping){progressBar.draw(colorPalette1[5], millis(), lastDownbeat, loopDuration);}
     leadNotesButtons.draw();
     xyControl.draw();
 
 }
 
 function audienceScreen(){
-    resetUI();
     background(colorPalette1[6]);
-    backButton.draw("<");
+    backButton.draw(colorPalette1[6]);
 }
 
 //input management
 
-function mousePressed(){
-    drumButton.detectInput(mouseX, mouseY, instrumentStates[0], ()=>{screenSetup(1);});
-    bassButton.detectInput(mouseX, mouseY, instrumentStates[1], ()=>{screenSetup(2)});
-    rhythmButton.detectInput(mouseX, mouseY,instrumentStates[2], ()=>{screenSetup(3)});
-    leadButton.detectInput(mouseX, mouseY, instrumentStates[3], ()=>{screenSetup(4)});
-    audButton.detectInput(mouseX, mouseY, false, ()=>{screenSetup(5)});
-    backButton.detectInput(mouseX, mouseY, false, ()=>{
-        if(screenState == 5){
-            screenSetup(7);
-        }else{
-            screenSetup(6);
-        }
-        
-    });
+function touchStarted(){
 
-    sequenceSelector.onClick(mouseX, mouseY, (data)=>{ 
-        socket.emit("instrumentInput", screenState - 1, "sequence", data);
-    });
-    leadNotesButtons.onPress(mouseX, mouseY, (data)=>{
-        socket.emit("instrumentInput", screenState - 1, "noteOn", data);
-    });
+    for(var t = 0; t < touches.length; t++){
+        let touchX = touches[t].x;
+        let touchY = touches[t].y;
+        drumButton.detectInput(touchX, touchY, instrumentStates[0], ()=>{screenSetup(1);});
+        bassButton.detectInput(touchX, touchY, instrumentStates[1], ()=>{screenSetup(2)});
+        rhythmButton.detectInput(touchX, touchY,instrumentStates[2], ()=>{screenSetup(3)});
+        leadButton.detectInput(touchX, touchY, instrumentStates[3], ()=>{screenSetup(4)});
+        audButton.detectInput(touchX, touchY, false, ()=>{screenSetup(5)});
+        backButton.detectInput(touchX, touchY, ()=>{
+            if(screenState == 5){
+                screenSetup(7);
+            }else{
+                screenSetup(6);
+            }
+            
+        });
+
+        sequenceSelector.onClick(touchX, touchY, (data)=>{ 
+            socket.emit("instrumentInput", screenState - 1, "sequence", data);
+        });
+        leadNotesButtons.onPress(touchX, touchY, (data)=>{
+            socket.emit("instrumentInput", screenState - 1, "noteOn", data);
+        });
+    }
     // xyControl.onClick(mouseX, mouseY);
+    return false;
 }
 
-function mouseReleased(){
-    leadNotesButtons.onRelease(mouseX, mouseY, (data)=>{
-        socket.emit("instrumentInput", screenState - 1, "noteOff", data);
-    });
+function touchEnded(){
+    
+    if(touches.length > 0){
+        for(var t = 0; t < touches.length; t++){
+            let touchX = touches[t].x;
+            let touchY = touches[t].y;
+            leadNotesButtons.onMultiRelease(touchX, touchY, (data)=>{
+                socket.emit("instrumentInput", screenState - 1, "noteOff", data);
+            });
+        }
+    }else{
+        leadNotesButtons.onLastRelease(mouseX, mouseY, (data)=>{
+            socket.emit("instrumentInput", screenState - 1, "noteOff", data);
+        });
+    }
+    return false;
 }
 
-function mouseDragged(){
-    xyControl.onDrag(mouseX, mouseY, (data)=>{
-        socket.emit("instrumentInput", screenState - 1, "xy", data);
-    });
-    filterSlider.onDrag(mouseX, mouseY, (data)=>{
-        socket.emit("instrumentInput", screenState - 1, "slider", data);
-    });
+function touchMoved(){
+    
+    for(var t = 0; t < touches.length; t++){
+        let touchX = touches[t].x;
+        let touchY = touches[t].y;
+        xyControl.onDrag(touchX, touchY, (data)=>{
+            socket.emit("instrumentInput", screenState - 1, "xy", data);
+        });
+        filterSlider.onDrag(touchX, touchY, (data)=>{
+            socket.emit("instrumentInput", screenState - 1, "slider", data);
+        });
+        leadNotesButtons.onDrag(touchX, touchY, (data)=>{
+            socket.emit("instrumentInput", screenState - 1, "noteOff", data);
+        });
+    }
+    return false;
 }
 
 
@@ -253,34 +297,50 @@ function resetUI(){
 //a utility function to set up each individual screen
 function screenSetup(screenNumber){
     if(screenNumber == 1){
+        resetUI();
         screenState = 1;
-        xyControl = new xyPad(width/2, height *0.35, width/2, height *0.45, width *0.7, colorPalette1[2]);
+        xyControl = new XyPad(width/2, height *0.35, width/2, height *0.35, width *0.7, colorPalette1[2]);
         filterSlider = new Slider(width/2, height *0.8, width *0.7, width/ 2, colorPalette1[2]);
         sequenceSelector = new Selector(width * 0.2, height * 0.7, width *0.2,width * 0.15, 4, 0, colorPalette1[2]);
 
         socket.emit("instrumentChoiceMade", 0);
+        socket.emit("instrumentInput", screenState - 1, "xy", [0, 0]);
+        socket.emit("instrumentInput", screenState - 1, "slider", 0.5);
+        socket.emit("instrumentInput", screenState - 1, "sequence", 0);
     }
     if(screenNumber == 2){
+        resetUI();
         screenState = 2;  
-        xyControl = new xyPad(width/2, height *0.35, width/2, height *0.45, width *0.7, colorPalette1[3]);
+        xyControl = new XyPad(width/2, height *0.35, width/2, height *0.35, width *0.7, colorPalette1[3]);
         filterSlider = new Slider(width/2, height *0.8, width *0.7, width/ 2, colorPalette1[3]);
         sequenceSelector = new Selector(width * 0.2, height * 0.7, width *0.2,width * 0.15, 4, 0, colorPalette1[3]); 
         socket.emit("instrumentChoiceMade", 1);
+        socket.emit("instrumentInput", screenState - 1, "xy", [0, 0]);
+        socket.emit("instrumentInput", screenState - 1, "slider", 0.5);
+        socket.emit("instrumentInput", screenState - 1, "sequence", 0);
     }
     if(screenNumber == 3){
+        resetUI();
         screenState = 3;   
-        xyControl = new xyPad(width/2, height *0.35, width/2, height *0.45, width *0.7, colorPalette1[4]);
+        xyControl = new XyPad(width/2, height *0.35, width/2, height *0.35, width *0.7, colorPalette1[4]);
         filterSlider = new Slider(width/2, height *0.8, width *0.7, width/ 2, colorPalette1[4]);
         sequenceSelector = new Selector(width * 0.2, height * 0.7, width *0.2,width * 0.15, 4, 0, colorPalette1[4]);  
         socket.emit("instrumentChoiceMade", 2);
+        socket.emit("instrumentInput", screenState - 1, "xy", [0, 0]);
+        socket.emit("instrumentInput", screenState - 1, "slider", 0.5);
+        socket.emit("instrumentInput", screenState - 1, "sequence", 0);
     }
     if(screenNumber == 4){
+        resetUI();
         screenState = 4;  
-        leadNotesButtons = new noteButtons(width/2, height *0.35,width * 0.5, 10, colorPalette1[5]);
-        xyControl = new xyPad(width/2, height *0.75, width/2, height *0.75, width *0.5, colorPalette1[5]);
+        leadNotesButtons = new NoteButtons(width/2, height *0.7,width * 0.65, 10, colorPalette1[5]);
+        xyControl = new XyPad(width/2, height *0.25, width/2, height *0.25, width *0.5, colorPalette1[5]);
         socket.emit("instrumentChoiceMade", 3);
+        socket.emit("instrumentInput", screenState - 1, "xy", [0, 0]);
+        
     }
     if(screenNumber == 5){
+        resetUI();
         screenState = 5;
         socket.emit("audienceJoin");
     }
@@ -293,9 +353,3 @@ function screenSetup(screenNumber){
         screenState = 0; 
     }
 }
-
-/*
-notes:
-
-known issue: when multiple instruments are in their respective screens, when one backs out the home screen doesn't update properly ???
-*/

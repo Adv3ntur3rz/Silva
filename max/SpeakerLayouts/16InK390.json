@@ -1,0 +1,260 @@
+{
+  "Name": "All-Round Ambisonic decoder (AllRAD) and loudspeaker layout",
+  "Description": "This configuration file was created with the IEM AllRADecoder v0.9.2 plug-in. 28 Feb 2022 11:55:23am",
+  "Decoder": {
+    "Name": "Decoder",
+    "Description": "A 1st order Ambisonics decoder using the AllRAD approach.",
+    "ExpectedInputNormalization": "n3d",
+    "Weights": "maxrE",
+    "WeightsAlreadyApplied": false,
+    "Matrix": [
+      [
+        0.07295425236225128,
+        3.233431471016956e-6,
+        0.04173611477017403,
+        0.1089363247156143
+      ],
+      [
+        0.1608096063137054,
+        -0.100421778857708,
+        0.1274294555187225,
+        0.1546002626419067
+      ],
+      [
+        0.1545011550188065,
+        -0.1101591885089874,
+        0.1707012951374054,
+        -0.01471697632223368
+      ],
+      [
+        0.09880847483873367,
+        -0.09897194802761078,
+        0.06581369787454605,
+        -0.08718031644821167
+      ],
+      [
+        0.1424143016338348,
+        -8.669449016451836e-6,
+        0.03997785225510597,
+        -0.2066419869661331
+      ],
+      [
+        0.1416768133640289,
+        0.09792668372392654,
+        0.1279134601354599,
+        -0.1115860566496849
+      ],
+      [
+        0.154499351978302,
+        0.1101349741220474,
+        0.1706940531730652,
+        0.02859717234969139
+      ],
+      [
+        0.1179071813821793,
+        0.1014351323246956,
+        0.06532782316207886,
+        0.1301816701889038
+      ],
+      [
+        0.1424151211977005,
+        8.264262760349084e-6,
+        -0.03999470546841621,
+        0.2066440880298615
+      ],
+      [
+        0.1416864991188049,
+        -0.09794982522726059,
+        -0.1279074549674988,
+        0.1115865185856819
+      ],
+      [
+        0.1545211374759674,
+        -0.1101623252034187,
+        -0.1707119643688202,
+        -0.02861799672245979
+      ],
+      [
+        0.1178866103291512,
+        -0.1014081910252571,
+        -0.06531063467264175,
+        -0.1301658600568771
+      ],
+      [
+        0.07296931743621826,
+        -4.042324690090027e-6,
+        -0.04174138605594635,
+        -0.1089602112770081
+      ],
+      [
+        0.1607964634895325,
+        0.1003949791193008,
+        -0.1274427771568298,
+        -0.1545901000499725
+      ],
+      [
+        0.1545459777116776,
+        0.110169306397438,
+        -0.1707295477390289,
+        0.01472648698836565
+      ],
+      [
+        0.09876325726509094,
+        0.09895644336938858,
+        -0.06578873842954636,
+        0.08715268969535828
+      ]
+    ],
+    "Routing": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ]
+  },
+  "LoudspeakerLayout": {
+    "Name": "A loudspeaker layout",
+    "Loudspeakers": [
+      {
+        "Azimuth": 0.0,
+        "Elevation": 30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 1,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -60.0,
+        "Elevation": 30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 2,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -90.0,
+        "Elevation": 30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 3,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -120.0,
+        "Elevation": 30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 4,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 180.0,
+        "Elevation": 30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 5,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 120.0,
+        "Elevation": 30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 6,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 90.0,
+        "Elevation": 30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 7,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 60.0,
+        "Elevation": 30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 8,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 0.0,
+        "Elevation": -30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 9,
+        "Gain": 0.0
+      },
+      {
+        "Azimuth": -60.0,
+        "Elevation": -30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 10,
+        "Gain": 0.0
+      },
+      {
+        "Azimuth": -90.0,
+        "Elevation": -30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 11,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": -120.0,
+        "Elevation": -30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 12,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 180.0,
+        "Elevation": -30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 13,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 120.0,
+        "Elevation": -30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 14,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 90.0,
+        "Elevation": -30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 15,
+        "Gain": 1.0
+      },
+      {
+        "Azimuth": 60.0,
+        "Elevation": -30.0,
+        "Radius": 1.0,
+        "IsImaginary": false,
+        "Channel": 16,
+        "Gain": 1.0
+      }
+    ]
+  }
+}

@@ -6,16 +6,10 @@ const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app).listen(8080);
-//for local testing
-// const io = new Server(server, {
-//     cors:{
-//         origin:"*" 
-//     }
-// });
 
 const io = new Server(server, {
     cors:{
-        origin:"*" //please please please change this sooon
+        origin:"https://localhost:443" //handled :)
     }
 });
 
@@ -25,6 +19,9 @@ let instruments = [false, false, false, false]; //keep track if an instrument is
 let instrumentsSocketId = [undefined, undefined, undefined, undefined];
 let audienceCount = 0; //number of audience members
 let audienceIDs = [];
+
+//for timing things
+let looping = false;
 
 //on connection request
 io.on("connection", (socket)=>{
@@ -40,6 +37,7 @@ io.on("connection", (socket)=>{
     //send initial info
     socket.emit("updateChoices", instruments);
     socket.emit("maxClientState", maxClientState);
+    socket.emit("looping", looping);
     console.log(`socket connnected with the id ${socket.id}`);
 
     //process instrument choice and broadcast to all connected sockets
@@ -57,7 +55,21 @@ io.on("connection", (socket)=>{
     });
 
     
+    //timing data
 
+    socket.on("downbeat", ()=>{
+        socket.broadcast.emit("downbeat");
+    });
+
+    socket.on("startLoop", ()=>{
+        looping = true;
+        socket.broadcast.emit("looping", looping);
+    });
+
+    socket.on("endLoop", ()=>{
+        looping = false;
+        socket.broadcast.emit("looping", looping);
+    });
 
     //transfer input data
     socket.on("instrumentInput", (instrumentId, type, value)=>{
