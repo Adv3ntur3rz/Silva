@@ -13,6 +13,29 @@ Here is the code for Project Silva, which is broken up into a few parts:
 * __QLC__ - The QLC+ workspace used to interface with the lights and recieve lighting information from Max
 
 If you want to keep up with other aspects of the production, keep an eye on the [production diary doc](https://docs.google.com/document/d/1Qq62USnN8HzGdD988b3l1mzTnGUS9A-tbOBu56_dSDw/edit?usp=sharing)
+
+## Version 2.0.0
+
+_Audio/MAX_
+
+* actually fixed clicks and pops from switching instruments using mc.matrix~ and the ramp property (I had a missing value last time)
+* fixed clicks and pops at the end of the loop points using trapezoid~ to duck volume at endpoints
+* revamped the mixing patch to include ambisonic reverb and delays, as well as individual volume sliders for individual instruments for fine mixing control
+* added the audio and configured the instruments for the forest scene 🥳
+* added a switching mechanism to switch between the ocean and forest scenes with a timed fade in between
+* fixed filter scaling for a more obvious curve when using the slider
+
+_Client Side_
+
+* changed default slider vaule to 100%
+
+_QLC_
+
+* did some simple testing with lights
+
+_Known Issues_
+
+* some timbres and effects for intruments need to be fine-tuned for more expressive control
 ## Version 1.1.0
 
 _Audio/MAX_

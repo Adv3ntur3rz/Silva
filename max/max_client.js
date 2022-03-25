@@ -43,3 +43,11 @@ max_api.addHandler("endLoop", ()=>{
     socket.emit("endLoop");
 });
 
+max_api.addHandler("switch_ocean", ()=>{
+    socket.emit("sw_o");
+});
+
+max_api.addHandler("switch_forest", ()=>{
+    socket.emit("sw_f");
+});
+

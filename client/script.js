@@ -300,34 +300,34 @@ function screenSetup(screenNumber){
         resetUI();
         screenState = 1;
         xyControl = new XyPad(width/2, height *0.35, width/2, height *0.35, width *0.7, colorPalette1[2]);
-        filterSlider = new Slider(width/2, height *0.8, width *0.7, width/ 2, colorPalette1[2]);
+        filterSlider = new Slider(width/2, height *0.8, width *0.7, width * 0.85, colorPalette1[2]);
         sequenceSelector = new Selector(width * 0.2, height * 0.7, width *0.2,width * 0.15, 4, 0, colorPalette1[2]);
 
         socket.emit("instrumentChoiceMade", 0);
         socket.emit("instrumentInput", screenState - 1, "xy", [0, 0]);
-        socket.emit("instrumentInput", screenState - 1, "slider", 0.5);
+        socket.emit("instrumentInput", screenState - 1, "slider", 0.99);
         socket.emit("instrumentInput", screenState - 1, "sequence", 0);
     }
     if(screenNumber == 2){
         resetUI();
         screenState = 2;  
         xyControl = new XyPad(width/2, height *0.35, width/2, height *0.35, width *0.7, colorPalette1[3]);
-        filterSlider = new Slider(width/2, height *0.8, width *0.7, width/ 2, colorPalette1[3]);
+        filterSlider = new Slider(width/2, height *0.8, width *0.7, width * 0.85, colorPalette1[3]);
         sequenceSelector = new Selector(width * 0.2, height * 0.7, width *0.2,width * 0.15, 4, 0, colorPalette1[3]); 
         socket.emit("instrumentChoiceMade", 1);
         socket.emit("instrumentInput", screenState - 1, "xy", [0, 0]);
-        socket.emit("instrumentInput", screenState - 1, "slider", 0.5);
+        socket.emit("instrumentInput", screenState - 1, "slider", 0.99);
         socket.emit("instrumentInput", screenState - 1, "sequence", 0);
     }
     if(screenNumber == 3){
         resetUI();
         screenState = 3;   
         xyControl = new XyPad(width/2, height *0.35, width/2, height *0.35, width *0.7, colorPalette1[4]);
-        filterSlider = new Slider(width/2, height *0.8, width *0.7, width/ 2, colorPalette1[4]);
+        filterSlider = new Slider(width/2, height *0.8, width *0.7, width * 0.85, colorPalette1[4]);
         sequenceSelector = new Selector(width * 0.2, height * 0.7, width *0.2,width * 0.15, 4, 0, colorPalette1[4]);  
         socket.emit("instrumentChoiceMade", 2);
         socket.emit("instrumentInput", screenState - 1, "xy", [0, 0]);
-        socket.emit("instrumentInput", screenState - 1, "slider", 0.5);
+        socket.emit("instrumentInput", screenState - 1, "slider", 0.99);
         socket.emit("instrumentInput", screenState - 1, "sequence", 0);
     }
     if(screenNumber == 4){
