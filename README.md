@@ -14,6 +14,45 @@ Here is the code for Project Silva, which is broken up into a few parts:
 
 If you want to keep up with other aspects of the production, keep an eye on the [production diary doc](https://docs.google.com/document/d/1Qq62USnN8HzGdD988b3l1mzTnGUS9A-tbOBu56_dSDw/edit?usp=sharing)
 
+## Version 3.0.0
+
+Visual Overhaul + the first public version of the installion
+
+_Audio/Max_
+
+* added scene switching handlers 
+* changed x-axis of ocean bass to panning position with chorus amount and y-axis to saturation
+* adjusted rhythm in ocean and forest to oscillate around the installation
+* added some more obvious modulation for the rhythm instruments: postive X is chorus, negative X is Crystalizer
+* changed ambisonic reverb for a few stereo reverbs placed in the ambisonic space
+    - one main reverb placed above for drums and ambiences
+    - a reverb that is placed at the same location as the rhythm
+    - a reverb that is place at the same location as the lead
+* added filter on the x-axis of the forest lead
+* added feild recording ambiences which the audience members can position on their screen
+* changed the math for number of audience members to trigger more audience layers
+* added some MIDI out to communicate with QLC+
+* removed ambisonic EQ and Compressor to save CPU
+
+_Server Side_
+
+* added scene switch handling
+* added audience member handling, calculating the average audience input position
+* fixed a bug where audience count was being updated incorrectly, causing one audience member to still exist even though all should be gone
+
+_Client Side_
+
+* redid the color palletes for each instrument and backgrounds
+* incorporated color switching on scene switch
+* created logos for instruments and sequences
+* revamped audience screen to create a "map" of the installation
+* added an interface for audience members to move the ambience around
+
+_QLC_
+
+* created some basic light scenes to serve as ambience
+
+
 ## Version 2.0.0
 
 _Audio/MAX_
