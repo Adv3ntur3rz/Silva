@@ -12,8 +12,18 @@ Here is the code for Project Silva, which is broken up into a few parts:
 
 * __QLC__ - The QLC+ workspace used to interface with the lights and recieve lighting information from Max
 
-If you want to keep up with other aspects of the production, keep an eye on the [production diary doc](https://docs.google.com/document/d/1Qq62USnN8HzGdD988b3l1mzTnGUS9A-tbOBu56_dSDw/edit?usp=sharing)
+## Version 4.0.0
+_Audio/MAX_
+The Innovation Expo Version!
 
+* added to the lighting subpatch to take audio and instrument switch data to send to QLC+ as MIDI data
+
+_QLC_
+
+* added support for full the 12 lights of the installation
+* added functions that react to the MIDI data coming from Max
+    - each instrument has its own function for a "zone" in the light display that reacts to MIDI cc level
+    - each instrument receives a color change message from Max
 ## Version 3.0.0
 
 Visual Overhaul + the first public version of the installion
@@ -51,8 +61,6 @@ _Client Side_
 _QLC_
 
 * created some basic light scenes to serve as ambience
-
-
 ## Version 2.0.0
 
 _Audio/MAX_
